@@ -11,41 +11,54 @@ function populateForm() {
 
   //TODO: Add an <option> tag inside the form's select for each product
   var selectElement = document.getElementById('items');
-  for (var i in Product.allProducts) {
-
+  for (var i = 0; i < Product.allProducts.length; i++) {
+    const product = Product.allProducts[i];
+    const option = document.createElement("option");
+    option.innerText = product.name;
+    option.value = i;
+    selectElement.appendChild(option);
   }
-
 }
 
 // When someone submits the form, we need to add the selected item to the cart
 // object, save the whole thing back to local storage and update the screen
 // so that it shows the # of items in the cart and a quick preview of the cart itself.
 function handleSubmit(event) {
-
+  event.preventDefault();
   // TODO: Prevent the page from reloading
 
+  const productIndex = event.target.items.value;
+  const product = Product.allProducts[productIndex];
+  const quantity = event.target.quantity.value;
+
   // Do all the things ...
-  addSelectedItemToCart();
+  addSelectedItemToCart(product, quantity);
   cart.saveToLocalStorage();
   updateCounter();
-  updateCartPreview();
+  updateCartPreview(product, quantity);
 
 }
 
 // TODO: Add the selected item and quantity to the cart
-function addSelectedItemToCart() {
+function addSelectedItemToCart(product, quantity) {
   // TODO: suss out the item picked from the select list
   // TODO: get the quantity
   // TODO: using those, add one item to the Cart
+  cart.addItem(product, quantity);
 }
 
 // TODO: Update the cart count in the header nav with the number of items in the Cart
-function updateCounter() {}
+function updateCounter() {
+  document.getElementById("itemCount").innerText = cart.items.length + " items";
+}
 
 // TODO: As you add items into the cart, show them (item & quantity) in the cart preview div
-function updateCartPreview() {
+function updateCartPreview(product, quantity) {
   // TODO: Get the item and quantity from the form
   // TODO: Add a new element to the cartContents div with that information
+  const item = document.createElement("h3");
+  item.innerText = `${product.name} , ${quantity}`;
+  document.getElementById("cartContents").appendChild(item);
 }
 
 // Set up the "submit" event listener on the form.
